@@ -13,14 +13,18 @@ namespace fs = std::filesystem;
 Node* Parser::parseXMLFile(const string& filePath) {
     // carga el archivo
     XMLDocument doc;
-    doc.LoadFile(filePath.c_str()); // tuve que usar char por que no me tomaba con el string
+    if (doc.LoadFile(filePath.c_str()) != tinyxml2::XML_SUCCESS) {
+        return nullptr;
+    }
 
     // obtener <book> del XML y crear un su nodo propio
-    XMLElement* book = doc.FirstChildElement("GoodreadsResponse")->FirstChildElement("book");
-    int id = book->IntAttribute("id");
-    Node* node = new Node(id);
+    XMLElement* response = doc.FirstChildElement("GoodreadsResponse");
+    if (!response) return nullptr;
 
-    // funciones para extraer datos sin que muera todo xd, 
+    XMLElement* book = response->FirstChildElement("book");
+    if (!book) return nullptr;
+
+    // funciones para extraer datos sin que muera todo xd
     auto getTextSafe = [](XMLElement* elem) -> string {
         if (elem && elem->GetText()) return elem->GetText();
         return "";
@@ -36,6 +40,8 @@ Node* Parser::parseXMLFile(const string& filePath) {
         return 0.0;
     };
 
+    Node* node = new Node(book->IntAttribute("id"), "book");
+
     // extraer info del libro con las funciones
     node->title = getTextSafe(book->FirstChildElement("title"));
     node->isbn = getTextSafe(book->FirstChildElement("isbn"));
@@ -45,41 +51,44 @@ Node* Parser::parseXMLFile(const string& filePath) {
     node->rating = getDoubleSafe(book->FirstChildElement("average_rating"));
     node->pages = getIntSafe(book->FirstChildElement("num_pages"));
 
-    // extraer info de libros similares
+    // extraer info de libros similares, ahora en vez de guardarlos en un vector aparte son hijos del <book>
     XMLElement* similar = book->FirstChildElement("similar_books");
     if (similar) {
-        XMLElement* book_sim = similar->FirstChildElement("book");
-        while (book_sim) {
-            BookSimilar sim;
-            sim.title = getTextSafe(book_sim->FirstChildElement("title"));
-            sim.isbn = getTextSafe(book_sim->FirstChildElement("isbn"));
-            sim.year = getIntSafe(book_sim->FirstChildElement("publication_year"));
-            node->similar_books.push_back(sim);
-            book_sim = book_sim->NextSiblingElement("book");
+        XMLElement* bookSim = similar->FirstChildElement("book");
+        while (bookSim) {
+            // crea nodo hijo para cada libro similar
+            Node* simNode = new Node(bookSim->IntAttribute("id"), "similar_book");
+            simNode->title = getTextSafe(bookSim->FirstChildElement("title"));
+            simNode->isbn = getTextSafe(bookSim->FirstChildElement("isbn"));
+            simNode->year = getIntSafe(bookSim->FirstChildElement("publication_year"));
+
+            node->children.push_back(simNode);
+            bookSim = bookSim->NextSiblingElement("book");
         }
     }
 
     return node;
 }
 
-// // lee todos los XMLs con parseXMLFile y construye el arbol
+// lee todos los XMLs con parseXMLFile y construye el arbol
 Node* Parser::parseAllBooks(const string& booksDirectory) {
-    Node* root = new Node(0);  // Nodo raiz ficticio
+    Node* root = new Node(0, "root"); // nodo raiz ficticio
 
     cout << "Buscando archivos en: " << booksDirectory << endl;
 
-    int count = 0;
     // itera sobre todos los archivos en la carpeta
     for (const auto& entry : fs::directory_iterator(booksDirectory)) {
         if (entry.path().extension() == ".xml") {
-            cout << "Cargando: " << entry.path().filename().string() << endl;
+            cout << "Cargando " << entry.path().filename().string() << endl;
+
             Node* bookNode = parseXMLFile(entry.path().string());
-            root->children.push_back(bookNode);
-            count++;
+            if (bookNode) {
+                root->children.push_back(bookNode);
+            }
         }
     }
 
-    cout << "Total cargados: " << root->children.size() << " libros" << endl;  // debug despues lo hay que sacarlo
+    cout << "Total cargados: " << root->children.size() << " libros" << endl;
+    // debug despues lo hay que sacar
     return root;
 }
-

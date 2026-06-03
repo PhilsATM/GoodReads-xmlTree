@@ -1,7 +1,8 @@
 #include "node.h"
 
 // constructor que inicializa los valores por defecto
-Node::Node(int id) : id(id), year(0), pages(0), rating(0.0) {}
+Node::Node(int id, const string& type)
+    : id(id), type(type), year(0), language(""), description(""), rating(0.0), pages(0) {}
 
 // libera la memoria
 Node::~Node() {
@@ -9,5 +10,4 @@ Node::~Node() {
         delete child;
     }
     children.clear();
-    similar_books.clear();
 }

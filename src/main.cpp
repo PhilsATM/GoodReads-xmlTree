@@ -14,24 +14,29 @@ int main() {
         if (root->children.size() > 0) {
             Node* firstBook = root->children[0]; // primer libro
             cout << "\n=== Primer libro ===" << endl;
+            cout << "Tipo: " << firstBook->type << endl;
             cout << "ID: " << firstBook->id << endl;
             cout << "Titulo: " << firstBook->title << endl;
             cout << "ISBN: " << firstBook->isbn << endl;
             cout << "Ano: " << firstBook->year << endl;
             cout << "Rating: " << firstBook->rating << endl;
             cout << "Paginas: " << firstBook->pages << endl;
-            cout << "Libros similares: " << firstBook->similar_books.size() << endl;
+            cout << "Libros similares (hijos): " << firstBook->children.size() << endl;
 
-            //  primer libro similar del primer libro :3
-            if (firstBook->similar_books.size() > 0) {
-                cout << "\n=== Primer libro similar ====" << endl;
-                cout << "  Titulo: " << firstBook->similar_books[0].title << endl;
-                cout << "  ISBN: " << firstBook->similar_books[0].isbn << endl;
-                cout << "  Ano: " << firstBook->similar_books[0].year << endl;
-                // etc 
+            // primer libro similar del primer libro :3, ahora se saca desde children
+            if (firstBook->children.size() > 0) {
+                Node* firstSimilar = firstBook->children[0];
+                cout << "\n=== Primer libro similar ===" << endl;
+                cout << "Tipo: " << firstSimilar->type << endl;
+                cout << "ID: " << firstSimilar->id << endl;
+                cout << "Titulo: " << firstSimilar->title << endl;
+                cout << "ISBN: " << firstSimilar->isbn << endl;
+                cout << "Ano: " << firstSimilar->year << endl;
+                // etc
             }
         }
     }
 
+    delete root; // liberar toda la memoria
     return 0;
 }
