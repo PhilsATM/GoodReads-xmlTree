@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # GoodReads XML Tree
 
 Proyecto en C++ que parsea archivos XML de Goodreads y construye un árbol de libros usando TinyXML2. Soporta funciones sobre el arbol tales como:
