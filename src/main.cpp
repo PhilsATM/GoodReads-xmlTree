@@ -1,6 +1,6 @@
 #include <iostream>
-#include "../include/node.h"
-#include "../include/parser.h"
+#include "node.h"
+#include "parser.h"
 
 using std::cout;
 using std::endl;

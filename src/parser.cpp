@@ -1,5 +1,5 @@
-#include "../include/parser.h"
-#include "../external/tinyxml2/tinyxml2.h"
+#include "parser.h"
+#include "tinyxml2.h"
 #include <iostream>
 #include <filesystem>
 
