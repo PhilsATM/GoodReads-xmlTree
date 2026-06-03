@@ -13,12 +13,14 @@ Proyecto en C++ que parsea archivos XML de Goodreads y construye un árbol de li
 Desde la raíz del proyecto:
 
 ```bash
-cmake -S . -B build && cmake --build build
+cmake -S . -B build
+cmake --build build
 ```
 
 ## Compilación sin CMake
 ```
-mkdir build && g++ -std=c++17 src/main.cpp src/node.cpp src/parser.cpp external/tinyxml2/tinyxml2.cpp -Iinclude -Iexternal/tinyxml2 -o build/goodreads_tree.exe
+mkdir build
+g++ -std=c++17 src/main.cpp src/node.cpp src/parser.cpp external/tinyxml2/tinyxml2.cpp -Iinclude -Iexternal/tinyxml2 -o build/goodreads_tree.exe
 ```
 ## Ejecución
 En Windows:
