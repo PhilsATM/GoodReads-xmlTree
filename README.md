@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # GoodReads XML Tree
 
 Proyecto en C++ que parsea archivos XML de Goodreads y construye un árbol de libros usando TinyXML2. Soporta funciones sobre el arbol tales como:
@@ -39,3 +40,6 @@ En Linux/macOS:
 
 - Felipe Alejandro Tilleria Morales — [PhilsATM](https://github.com/PhilsATM)
 - Jhostian Matías San Martín Morales — [Jhoossmm](https://github.com/Jhoossmm)
+=======
+# GoodReads-xmlTree
+>>>>>>> origin/main
