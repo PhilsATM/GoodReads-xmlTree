@@ -11,16 +11,7 @@ namespace fs = std::filesystem;
 
 // lee un archivo XML y crea un nodo
 Node* Parser::parseXMLFile(const string& filePath) {
-    // carga el archivo
-    XMLDocument doc;
-    doc.LoadFile(filePath.c_str()); // tuve que usar char por que no me tomaba con el string
-
-    // obtener <book> del XML y crear un su nodo propio
-    XMLElement* book = doc.FirstChildElement("GoodreadsResponse")->FirstChildElement("book");
-    int id = book->IntAttribute("id");
-    Node* node = new Node(id);
-
-    // funciones para extraer datos sin que muera todo xd, 
+        // funciones para extraer datos sin que muera todo xd, 
     auto getTextSafe = [](XMLElement* elem) -> string {
         if (elem && elem->GetText()) return elem->GetText();
         return "";
@@ -35,6 +26,15 @@ Node* Parser::parseXMLFile(const string& filePath) {
         if (elem) return elem->DoubleText();
         return 0.0;
     };
+
+    // carga el archivo
+    XMLDocument doc;
+    doc.LoadFile(filePath.c_str()); // tuve que usar char por que no me tomaba con el string
+
+    // obtener <book> del XML y crear un su nodo propio
+    XMLElement* book = doc.FirstChildElement("GoodreadsResponse")->FirstChildElement("book");
+    int id = getIntSafe(book->FirstChildElement("id")); //cambio en la forma que se extrae el ID
+    Node* node = new Node(id);
 
     // extraer info del libro con las funciones
     node->title = getTextSafe(book->FirstChildElement("title"));
