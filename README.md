@@ -40,6 +40,3 @@ En Linux/macOS:
 
 - Felipe Alejandro Tilleria Morales — [PhilsATM](https://github.com/PhilsATM)
 - Jhostian Matías San Martín Morales — [Jhoossmm](https://github.com/Jhoossmm)
-=======
-# GoodReads-xmlTree
->>>>>>> origin/main
