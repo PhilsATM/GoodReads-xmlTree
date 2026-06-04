@@ -16,6 +16,7 @@ add_executable(goodreads_tree
     src/main.cpp
     src/node.cpp
     src/parser.cpp
+    src/treeFuncs.cpp
 )
 
 target_include_directories(goodreads_tree PRIVATE
