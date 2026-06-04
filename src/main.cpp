@@ -24,14 +24,7 @@ int main() {
         cout << "\n=== Prueba 2: Precursores ===" << endl;
         vector<int> prec = arbolLibros->precursores();
         cout << "Se encontraron " << prec.size() << " libros precursores." << endl;
-        if (!prec.empty()) {
-            cout << "Ejemplo (primeros 3 IDs precursores): ";
-            for (size_t i = 0; i < prec.size() && i < 3; ++i) {
-                cout << prec[i] << " ";
-            }
-            cout << endl;
-        }
-
+        
         // Prueba de borrar_ratings
         double ratingCorte = 4.2;
         cout << "\n=== Prueba 3: Borrar Ratings <= " << ratingCorte << " ===" << endl;

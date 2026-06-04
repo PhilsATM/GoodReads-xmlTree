@@ -22,7 +22,7 @@ void listarHelper(Node* node) {
     
     //se ignora la raíz ficticia creada por el parser (id == 0)
     if (node->type == "book") {
-        cout << node->id << endl;
+        cout << "ID: " << node->id << endl;
     }
     
     //llamada recursiva a los hijos
@@ -97,5 +97,10 @@ void precursoresHelper(Node* node, vector<int>& result) {
 vector<int> Tree::precursores() {
     vector<int> result;
     precursoresHelper(root, result);
+    if (!result.empty()) {
+            for (size_t i = 0; i < result.size(); ++i) {
+                cout << "IDs precursores: "<< result[i] << " " << endl;
+            }
+        }
     return result;
 }
