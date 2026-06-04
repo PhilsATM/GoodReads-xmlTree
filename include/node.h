@@ -7,31 +7,22 @@
 using std::string;
 using std::vector;
 
-// info de los libros similares 
-struct BookSimilar {
-    string title;
-    string isbn;
-    int year;
-};
-
 // nodo para los libros en el arbol con sus campos de informacion
 class Node {
 public:
-    int id;              
-    string title;       
-    string isbn;         
-    int year;            
-    string language;     
-    string description;  
-    double rating;      
-    int pages;           
-    vector<BookSimilar> similar_books;  
-    vector<Node*> children;            
+    int id;
+    string type; // tipo de nodo pa cachar si es root, book o similar_book
+    string title;
+    string isbn;
+    int year;
+    string language;
+    string description;
+    double rating;
+    int pages;
+    vector<Node*> children; // ahora los hijos son nodos igual
 
-    Node(int id = 0);
-    ~Node();
+    Node(int id = 0, const string& type = "book");
+    ~Node(); //destructor
 };
 
 #endif
-
-

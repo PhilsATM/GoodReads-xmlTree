@@ -20,6 +20,7 @@ add_executable(goodreads_tree
 
 target_include_directories(goodreads_tree PRIVATE
     ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/external/tinyxml2
 )
 
 target_link_libraries(goodreads_tree PRIVATE tinyxml2)

@@ -21,7 +21,7 @@ void listarHelper(Node* node) {
     if (!node) return;
     
     //se ignora la raíz ficticia creada por el parser (id == 0)
-    if (node->id != 0) {
+    if (node->type == "book") {
         cout << node->id << endl;
     }
     
@@ -47,7 +47,7 @@ void borrarHelper(Node* node, double r) {
         borrarHelper(child, r);
         
         //si el libro cumple la condicion para ser borrado
-        if (child->rating <= r) {
+        if (child->type == "book" && child->rating <= r) {
             node->children.erase(node->children.begin() + i);
             delete child; //el destructor de Node elimina a sus propios hijos
         }
@@ -63,24 +63,34 @@ void precursoresHelper(Node* node, vector<int>& result) {
     if (!node) return;
     
     //se valida que sea un libro real y que tenga libros similares para comparar
-    if (node->id != 0 && !node->similar_books.empty()) {
+    if (node->type == "book") {
         bool todos_posteriores = true;
-        for (const BookSimilar& sim : node->similar_books) {
-            //si un libro similar se publico en el mismo año o antes, no cumple
-            if (sim.year <= node->year) {
-                todos_posteriores = false;
-                break;
+        bool tiene_similares = false;
+        if (node->year == 0) {
+            todos_posteriores = false; //si no tiene año, no se puede considerar precursor
+        }
+        else {
+            for (Node* child : node->children) {
+                if (child->type == "similar_book") {
+                    tiene_similares = true;
+                    //si un libro similar se publico en el mismo año o antes, no cumple
+                    if (child->year > 0 && child->year <= node->year) {
+                        todos_posteriores = false;
+                        break;
+                    }
+                }
             }
         }
-        
-        if (todos_posteriores) {
+        if (tiene_similares && todos_posteriores) {
             result.push_back(node->id);
         }
     }
     
     //continuar recorrido
     for (Node* child : node->children) {
-        precursoresHelper(child, result);
+        if (child->type != "similar_book") { //solo se consideran libros reales para seguir buscando precursores
+            precursoresHelper(child, result);
+        }
     }
 }
 
