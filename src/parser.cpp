@@ -40,7 +40,7 @@ Node* Parser::parseXMLFile(const string& filePath) {
         return 0.0;
     };
 
-    Node* node = new Node(book->IntAttribute("id"), "book");
+    Node* node = new Node(getIntSafe(book->FirstChildElement("id")), "book");
 
     // extraer info del libro con las funciones
     node->title = getTextSafe(book->FirstChildElement("title"));
@@ -57,7 +57,7 @@ Node* Parser::parseXMLFile(const string& filePath) {
         XMLElement* bookSim = similar->FirstChildElement("book");
         while (bookSim) {
             // crea nodo hijo para cada libro similar
-            Node* simNode = new Node(bookSim->IntAttribute("id"), "similar_book");
+            Node* simNode = new Node(getIntSafe(bookSim->FirstChildElement("id")), "similar_book");
             simNode->title = getTextSafe(bookSim->FirstChildElement("title"));
             simNode->isbn = getTextSafe(bookSim->FirstChildElement("isbn"));
             simNode->year = getIntSafe(bookSim->FirstChildElement("publication_year"));
