@@ -20,7 +20,7 @@ void Tree::setRoot(Node* node) {
 void listarHelper(Node* node) {
     if (!node) return;
     
-    //se ignora la raíz ficticia creada por el parser (id == 0)
+    //lista solo si es un libro principal
     if (node->type == "book") {
         cout << "ID: " << node->id << endl;
     }
@@ -46,7 +46,7 @@ void borrarHelper(Node* node, double r) {
         //se explora primero la profundidad para no perder referencias
         borrarHelper(child, r);
         
-        //si el libro cumple la condicion para ser borrado
+        //solo borramos si es un libro principal y su rating promedio es menor a r
         if (child->type == "book" && child->rating <= r) {
             node->children.erase(node->children.begin() + i);
             delete child; //el destructor de Node elimina a sus propios hijos
@@ -62,7 +62,7 @@ void Tree::borrar_ratings(double r) {
 void precursoresHelper(Node* node, vector<int>& result) {
     if (!node) return;
     
-    //se valida que sea un libro real y que tenga libros similares para comparar
+    //se valida que sea un libro principal
     if (node->type == "book") {
         bool todos_posteriores = true;
         bool tiene_similares = false;
@@ -71,9 +71,9 @@ void precursoresHelper(Node* node, vector<int>& result) {
         }
         else {
             for (Node* child : node->children) {
-                if (child->type == "similar_book") {
+                if (child->type == "similar_book") { //confirmamos que es un libro similar
                     tiene_similares = true;
-                    //si un libro similar se publico en el mismo año o antes, no cumple
+                    //si un libro similar se publico en el mismo año o antes (o si no tiene un año especificado), no cumple
                     if (child->year > 0 && child->year <= node->year) {
                         todos_posteriores = false;
                         break;
@@ -86,7 +86,7 @@ void precursoresHelper(Node* node, vector<int>& result) {
         }
     }
     
-    //continuar recorrido
+    //continuar recorrido solo en nodos que tienen hijos
     for (Node* child : node->children) {
         if (child->type != "similar_book") { //solo se consideran libros reales para seguir buscando precursores
             precursoresHelper(child, result);
