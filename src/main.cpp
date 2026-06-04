@@ -1,42 +1,53 @@
 #include <iostream>
 #include "node.h"
 #include "parser.h"
+#include "treeFuncs.h"
 
 using std::cout;
 using std::endl;
 
 int main() {
-    // parsear los 10k libros en books_xml
-    Node* root = Parser::parseAllBooks("books_xml");
-    if (root) {
+    cout << "=== Cargando Dataset ===" << endl;
+    Node* rootNode = Parser::parseAllBooks("books_xml");
+    
+    if (rootNode) {
+        Tree* arbolLibros = new Tree();
+        arbolLibros->setRoot(rootNode);
 
-        // prueba a extraer info pa ver si se genero el arbol bien
-        if (root->children.size() > 0) {
-            Node* firstBook = root->children[0]; // primer libro
-            cout << "\n=== Primer libro ===" << endl;
-            cout << "Tipo: " << firstBook->type << endl;
-            cout << "ID: " << firstBook->id << endl;
-            cout << "Titulo: " << firstBook->title << endl;
-            cout << "ISBN: " << firstBook->isbn << endl;
-            cout << "Ano: " << firstBook->year << endl;
-            cout << "Rating: " << firstBook->rating << endl;
-            cout << "Paginas: " << firstBook->pages << endl;
-            cout << "Libros similares (hijos): " << firstBook->children.size() << endl;
+        // Prueba listado preorder 
+        // (Imprimimos aviso para que la consola no colapse con los 10,000 IDs)
+        cout << "\n=== Prueba 1: Listar (Preorder) ===" << endl;
+        cout << "Iniciando listado de IDs..." << endl;
+        arbolLibros->listar(); // Descomenta esta línea para imprimir todos los IDs reales.
 
-            // primer libro similar del primer libro :3, ahora se saca desde children
-            if (firstBook->children.size() > 0) {
-                Node* firstSimilar = firstBook->children[0];
-                cout << "\n=== Primer libro similar ===" << endl;
-                cout << "Tipo: " << firstSimilar->type << endl;
-                cout << "ID: " << firstSimilar->id << endl;
-                cout << "Titulo: " << firstSimilar->title << endl;
-                cout << "ISBN: " << firstSimilar->isbn << endl;
-                cout << "Ano: " << firstSimilar->year << endl;
-                // etc
+        // Prueba de precursores
+        cout << "\n=== Prueba 2: Precursores ===" << endl;
+        vector<int> prec = arbolLibros->precursores();
+        cout << "Se encontraron " << prec.size() << " libros precursores." << endl;
+        if (!prec.empty()) {
+            cout << "Ejemplo (primeros 3 IDs precursores): ";
+            for (size_t i = 0; i < prec.size() && i < 3; ++i) {
+                cout << prec[i] << " ";
             }
+            cout << endl;
         }
+
+        // Prueba de borrar_ratings
+        double ratingCorte = 4.2;
+        cout << "\n=== Prueba 3: Borrar Ratings <= " << ratingCorte << " ===" << endl;
+        size_t cantidadAntes = rootNode->children.size();
+        cout << "Cantidad de hijos en raiz antes de borrar: " << cantidadAntes << endl;
+        
+        arbolLibros->borrar_ratings(ratingCorte);
+        
+        size_t cantidadDespues = rootNode->children.size();
+        cout << "Cantidad de hijos en raiz despues de borrar: " << cantidadDespues << endl;
+        cout << "Se eliminaron " << (cantidadAntes - cantidadDespues) << " nodos de primer nivel." << endl;
+
+        delete arbolLibros; // Libera toda la memoria 
+    } else {
+        cout << "Error al cargar los archivos XML." << endl;
     }
 
-    delete root; // liberar toda la memoria
     return 0;
 }
